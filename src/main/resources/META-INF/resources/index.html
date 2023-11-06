@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="icon" href="./images/calculadora.png" type="image/x-icon">
+</head>
+<body>
+
+
+<div class="calculadora">
+    <label>
+        <input type="text" class="display" id="display" disabled>
+    </label>
+
+    <div class="botoes" id="botoes">
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>/</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>*</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>-</button>
+
+        <button>0</button>
+        <button>.</button>
+        <button>=</button>
+        <button>+</button>
+        <button>CE</button>
+        <button id="scientificButton">Calculadora Ciêntifica</button>
+    </div>
+    <div class="calculadora-cientifica" style="display: none;">
+        <div class="botoes" id="botoesCientificos">
+            <button>sin</button>
+            <button>cos</button>
+            <button>tan</button>
+            <button>sqrt</button>
+            <button>^</button>
+        </div>
+    </div>
+</div>
+
+<script src="./links.js"></script>
+<script>
+
+    const scientificButton = document.getElementById("scientificButton");
+    const scientificSection = document.querySelector(".calculadora-cientifica");
+
+    scientificButton.addEventListener("click", function () {
+        if (scientificSection.style.display === "none") {
+            scientificSection.style.display = "block";
+        } else {
+            scientificSection.style.display = "none";
+        }
+    });
+</script>
+</body>
+</html>
