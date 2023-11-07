@@ -3,14 +3,29 @@ let inputBuffer = "";
 let operator = "";
 let firstInput = "";
 
+
 // Capturando elementos
 const display = document.getElementById("display");
 const buttons = document.getElementById("botoes");
+const negativeButton = document.getElementById("negative");
 
 // Função para atualizar o display
 function updateDisplay() {
     display.value = inputBuffer;
 }
+
+negativeButton.addEventListener("click", function() {
+    if (inputBuffer !== "") {
+        if (inputBuffer[0] === "-") {
+            // Se já for negativo, remova o sinal
+            inputBuffer = inputBuffer.slice(1);
+        } else {
+            // Caso contrário, adicione um sinal negativo na frente do número
+            inputBuffer = "-" + inputBuffer;
+        }
+        updateDisplay();
+    }
+});
 buttons.addEventListener("click", async function(event) {
     const value = event.target.innerText;
 
@@ -54,7 +69,7 @@ buttons.addEventListener("click", async function(event) {
     } else if (value === "^") {
         // Se o valor é "^" (potenciação)
         if (firstInput !== "") {
-            const response = await fetch(`http://localhost:8080/scientific?base=${encodeURIComponent(firstInput)}&exponent=${encodeURIComponent(inputBuffer)}`);
+            const response = await fetch(`http://localhost:8080/scientific/power?base=${encodeURIComponent(firstInput)}&exponent=${encodeURIComponent(inputBuffer)}`);
             if (response.ok) {
                 inputBuffer = await response.text();
                 firstInput = "";

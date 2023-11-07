@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CalculatorResource {
     @GetMapping("/calculate")
-    public ResponseEntity<String>  calculate(@RequestParam("first") float first, @RequestParam("second") float second, @RequestParam("operator") String operator){
+    public ResponseEntity<String>  calculate(
+            @RequestParam("first") float first,
+            @RequestParam("second") float second,
+            @RequestParam("operator") String operator
+    ){
         Divisao divisao = new Divisao();
         Somar somar = new Somar();
         Substracao substracao = new Substracao();
