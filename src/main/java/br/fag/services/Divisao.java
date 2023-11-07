@@ -6,7 +6,7 @@ public class Divisao {
 
     public Resultado operacao(int primeiroValor, int segundoValor){
        if(segundoValor <= 0){
-            return new Resultado("Divisão por zero permitida");
+            return new Resultado("Divisão por zero não permitida");
        }
        return new Resultado( (float) primeiroValor / segundoValor);
     }
