@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Scientific {
     @GetMapping("/scientific")
-    public ResponseEntity<String> calculateScientific(
+    public ResponseEntity<Double> calculateScientific(
             @RequestParam("value") double value,
             @RequestParam("operation") String operator
     ){
@@ -33,12 +33,17 @@ public class Scientific {
             case "tan":
                 resultado = new Resultado(Tan.calcularTangente(value));
                 break;
+            case "^":
+                resultado = new Resultado(Tan.calcularTangente(value));
+                break;
             default:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operator");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
         if (resultado.temErro()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultado.mensagemErro);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.ok("ok");
+
+        return ResponseEntity.ok(resultado.valor);
     }
 }

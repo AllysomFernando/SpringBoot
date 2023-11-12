@@ -30,7 +30,6 @@
         <button>2</button>
         <button>3</button>
         <button>-</button>
-        <button id="negate">±</button>
 
         <button>0</button>
         <button>.</button>
@@ -45,24 +44,11 @@
             <button>cos</button>
             <button>tan</button>
             <button>sqrt</button>
-            <button>^</button>
         </div>
     </div>
 </div>
 
 <script src="./links.js"></script>
-<script>
 
-    const scientificButton = document.getElementById("scientificButton");
-    const scientificSection = document.querySelector(".calculadora-cientifica");
-
-    scientificButton.addEventListener("click", function () {
-        if (scientificSection.style.display === "none") {
-            scientificSection.style.display = "block";
-        } else {
-            scientificSection.style.display = "none";
-        }
-    });
-</script>
 </body>
 </html>

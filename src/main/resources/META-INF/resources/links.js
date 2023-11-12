@@ -1,84 +1,98 @@
-// Evento de clique para os botões
+// Estado da calculadora
 let inputBuffer = "";
 let operator = "";
 let firstInput = "";
 
-
-// Capturando elementos
+// Elementos DOM
 const display = document.getElementById("display");
 const buttons = document.getElementById("botoes");
-const negativeButton = document.getElementById("negative");
+const scientificSection = document.querySelector(".calculadora-cientifica");
 
 // Função para atualizar o display
 function updateDisplay() {
     display.value = inputBuffer;
 }
 
-negativeButton.addEventListener("click", function() {
-    if (inputBuffer !== "") {
-        if (inputBuffer[0] === "-") {
-            // Se já for negativo, remova o sinal
-            inputBuffer = inputBuffer.slice(1);
+
+
+// Função para realizar operações básicas
+async function performBasicOperation(value) {
+    if (firstInput !== "") {
+        const response = await fetch(`http://localhost:8080/calculate?first=${encodeURIComponent(firstInput)}&second=${encodeURIComponent(inputBuffer)}&operator=${encodeURIComponent(value)}`);
+        if (response.ok) {
+            inputBuffer = await response.text();
+            firstInput = "";
+            operator = "";
         } else {
-            // Caso contrário, adicione um sinal negativo na frente do número
-            inputBuffer = "-" + inputBuffer;
+            alert("Error: " + await response.text());
         }
         updateDisplay();
     }
+}
+// Função para realizar operações científicas
+async function performScientificOperation(value) {
+    if (inputBuffer !== "") {
+        // Exibir a expressão no display
+        const expression = `${value}(${inputBuffer})`;
+        display.value = expression;
+
+        // Enviar solicitação para o servidor
+        const response = await fetch(`http://localhost:8080/scientific?value=${encodeURIComponent(inputBuffer)}&operation=${encodeURIComponent(value)}`);
+        if (response.ok) {
+            inputBuffer = await response.text();
+        } else {
+            alert("Error: " + await response.text());
+        }
+
+        // Atualizar o display com a expressão completa e o resultado
+        display.value = `${expression} = ${inputBuffer}`;
+    }
+}
+
+// Adicionar evento de clique para os botões científicos
+const scientificButtons = document.getElementById("botoesCientificos");
+scientificButtons.addEventListener("click", async function (event) {
+    const value = event.target.innerText;
+    await performScientificOperation(value);
 });
-buttons.addEventListener("click", async function(event) {
+
+// Adicionar evento de clique para os botões
+buttons.addEventListener("click", async function (event) {
     const value = event.target.innerText;
 
     if (!isNaN(value) || value === ".") {
-        // Se o valor é um número ou um ponto
+        // Números e ponto decimal
         inputBuffer += value;
     } else if (["/", "*", "+", "-"].includes(value)) {
-        // Se o valor é um operador
+        // Operadores básicos
         if (firstInput === "") {
             firstInput = inputBuffer;
             inputBuffer = "";
             operator = value;
         }
     } else if (value === "=") {
-        // Se o valor é o sinal de igual
-        if (firstInput !== "") {
-            const response = await fetch(`http://localhost:8080/calculate?first=${encodeURIComponent(firstInput)}&second=${encodeURIComponent(inputBuffer)}&operator=${encodeURIComponent(operator)}`);
-            if (response.ok) {
-                inputBuffer = await response.text();
-                firstInput = "";
-                operator = "";
-            } else {
-                alert("Error: " + await response.text());
-            }
-        }
+        // Sinal de igual
+        await performBasicOperation(operator);
     } else if (value === "CE") {
-        // Se o valor é "CE" (Limpar)
+        // Limpar
         inputBuffer = "";
         firstInput = "";
         operator = "";
-    } else if (value === "sin" || value === "cos" || value === "tan" || value === "sqrt") {
-        // Se o valor é uma operação científica
-        if (inputBuffer !== "") {
-            const response = await fetch(`http://localhost:8080/scientific?value=${encodeURIComponent(inputBuffer)}&operation=${encodeURIComponent(value)}`);
-            if (response.ok) {
-                inputBuffer = await response.text();
-            } else {
-                alert("Error: " + await response.text());
-            }
-        }
+        updateDisplay();
+    } else if (["sin", "cos", "tan", "sqrt", "^"].includes(value)) {
+        // Operações científicas
+        await performScientificOperation(value);
     } else if (value === "^") {
-        // Se o valor é "^" (potenciação)
-        if (firstInput !== "") {
-            const response = await fetch(`http://localhost:8080/scientific/power?base=${encodeURIComponent(firstInput)}&exponent=${encodeURIComponent(inputBuffer)}`);
-            if (response.ok) {
-                inputBuffer = await response.text();
-                firstInput = "";
-                operator = "";
-            } else {
-                alert("Error: " + await response.text());
-            }
-        }
+        // Potenciação
+        await performScientificOperation("power");
     }
 
+    updateDisplay();
+});
+
+// Adicionar evento de clique para o botão de troca para a calculadora científica
+const scientificButton = document.getElementById("scientificButton");
+scientificButton.addEventListener("click", function () {
+    scientificSection.style.display = (scientificSection.style.display === "none") ? "block" : "none";
     updateDisplay();
 });
