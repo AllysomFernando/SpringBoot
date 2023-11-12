@@ -1,9 +1,9 @@
 package br.fag.model;
 
 public class Resultado {
-    public float valor;
+    public double valor;
     public String mensagemErro;
-    public Resultado(float valor) {
+    public Resultado(double valor) {
         this.valor = valor;
     }
 

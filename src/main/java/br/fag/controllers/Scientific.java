@@ -15,27 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class Scientific {
     @GetMapping("/scientific")
     public ResponseEntity<String> calculateScientific(
-            @RequestParam("value") float value,
+            @RequestParam("value") double value,
             @RequestParam("operation") String operator
     ){
-        Cos cos = new Cos();
-        Sin sin = new Sin();
-        Sqrt sqrt = new Sqrt();
-        Tan tan = new Tan();
         Resultado resultado;
 
         switch (operator) {
             case "sin":
-                resultado = new Resultado(sin);
+                resultado = new Resultado(Sin.calcularSeno(value));
                 break;
             case "cos":
-                resultado = new Resultado(cos);
+                resultado = new Resultado(Cos.calcularCos(value));
                 break;
             case "sqrt":
-                resultado = new Resultado(sqrt);
+                resultado = new Resultado(Sqrt.calcularRaizQuadrada(value));
                 break;
             case "tan":
-                resultado = new Resultado(tan);
+                resultado = new Resultado(Tan.calcularTangente(value));
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid operator");
